@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="zh-cn" Name="WeatherQueryCommandSet_zh-cn">
+    <AppName> 大气探测装置 </AppName>
+    <Example> 探测杭州的情况 </Example>
+
+    <Command Name="WeatherQueryCommand">
+      <Example> 杭州的情况 </Example>
+      <ListenFor> 探测{cityName}[的][情况] </ListenFor>
+      <ListenFor> 进入{cityName}[市] </ListenFor>
+      <Feedback> 正在进行探测，目标：{cityName}... </Feedback>
+      <Navigate></Navigate>
+    </Command>
+
+    <PhraseList Label="cityName">
+      <Item>杭州</Item>
+      <Item>北京</Item>
+      <Item>上海</Item>
+      <Item>广州</Item>
+      <Item>深圳</Item>
+      <Item>重庆</Item>
+      <Item>天津</Item>
+      <Item>南京</Item>
+      <Item>衢州</Item>
+      <Item>开化</Item>
+
+    </PhraseList>
+    
+  </CommandSet>
+</VoiceCommands>
