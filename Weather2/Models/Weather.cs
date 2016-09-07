@@ -408,12 +408,15 @@ namespace Weather2.Models
     internal class WeatherProxy
     {
         //这个网址是和风天气的api说明，http://www.heweather.com/documents/api
-        static string myKey = "69ebef9bc6c6480987683f57318298aa";
 
         //传入cityId，返回Weather类实例
-        public static async Task<Weather> GetWeatherByCityIdAsync(string cityId)
+        public static async Task<Weather> GetWeatherByCityIdAsync(string cityId,string heWeatherKey)
         {
-            string httpUri = String.Format("https://api.heweather.com/x3/weather?cityid={0}&key={1}", cityId, myKey);
+            if("0" == heWeatherKey || null == heWeatherKey )
+            {
+                heWeatherKey = "69ebef9bc6c6480987683f57318298aa";
+            }
+            string httpUri = String.Format("https://api.heweather.com/x3/weather?cityid={0}&key={1}", cityId, heWeatherKey);
             HttpClient hc = new HttpClient();
 
             //由于传回的string中命名带有空格，不得已替换之

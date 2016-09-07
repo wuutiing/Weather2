@@ -67,14 +67,16 @@
         </Style>
     </Page.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" Name="myScrollViewer3">
+        
         <RelativePanel Name="myRelativePanel" >
+            
             <Grid Name="morenGrid" Margin="10,30,0,20" Background="#9FFFFFFF" Height="30" Width="300">
                 <TextBlock Name="morenTextBlock" Margin="5,0,0,0" Text="默认城市" VerticalAlignment="Center" FontSize="18"></TextBlock>
             </Grid>
             
             <Button Click="morenButton_Click" Name="morenButton" Margin="10,0,0,0" Style="{StaticResource ButtonStyle1}" 
-                    RelativePanel.AlignLeftWith="morenGrid" RelativePanel.Below="morenGrid" Foreground="White"></Button>
+                    RelativePanel.AlignLeftWith="morenGrid" RelativePanel.Below="morenGrid" Foreground="White" Content="还没有设置默认城市哦，点击前往设置"></Button>
             <Grid Name="favoriteGrid" Margin="10,30,0,20" Background="#9FFFFFFF" Height="30" Width="300" RelativePanel.Below="morenButton" >
                 <TextBlock Name="favoriteTextBlock" Margin="5,0,0,0" Text="我的收藏" FontSize="18" RelativePanel.Below="morenButton"></TextBlock>
             </Grid>
@@ -91,6 +93,7 @@
                                     </MenuFlyoutItem>
                                 </MenuFlyout>
                             </FlyoutBase.AttachedFlyout>
+                            
                             <Image Source="{x:Bind data,Converter={StaticResource weatherToTxtConverter},ConverterParameter=back}"/>
                             <Image Height="100" Width="100" Margin="10,30,0,0" HorizontalAlignment="Left"
                                    Source="{x:Bind data,Converter={StaticResource weatherToTxtConverter},ConverterParameter=tupian}"/>

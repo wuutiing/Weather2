@@ -38,13 +38,13 @@ namespace Weather2
             Style morenButtonStyle = (Style)morenButton.GetValue(Button.StyleProperty);
             if (localSettings.Values["NowDisplayCity"] != null)
             {
-                if (ht.ContainsKey(localSettings.Values["NowDisplayCity"].ToString()))
+                if (ht.ContainsKey((string)localSettings.Values["NowDisplayCity"]))
                 {
                     ImageBrush ib = new ImageBrush();
                     string tise = ht[localSettings.Values["NowDisplayCity"].ToString()].ToString();
                     ib.ImageSource = new BitmapImage(new Uri(String.Format("ms-appx:///" + tise), UriKind.Absolute));
                     ib.Stretch = Stretch.UniformToFill;
-                    myRelativePanel.Background = ib;
+                    myScrollViewer3.Background = ib;
 
                 }
                 else
@@ -52,23 +52,10 @@ namespace Weather2
                     ImageBrush ib = new ImageBrush();
                     ib.ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/CityImages/other.jpg", UriKind.Absolute));
                     ib.Stretch = Stretch.UniformToFill;
-                    myRelativePanel.Background = ib;
+                    myScrollViewer3.Background = ib;
 
                 }
-            }
-            
-            
-
-            string[] strs = { };
-            if (localSettings.Values["FavoriteCities"] != null)
-            {
-                strs = (string[])localSettings.Values["FavoriteCities"];
-            }
-
-            
-
-
-
+            }            
 
         }
 
@@ -80,7 +67,7 @@ namespace Weather2
                 ng.Height = 150;
                 ng.Width = 300;
                 string str = localSettings.Values["DefaultCity"].ToString();
-                Weather w = await WeatherProxy.GetWeatherByCityIdAsync((string)App.cityHash[str]);
+                Weather w = await WeatherProxy.GetWeatherByCityIdAsync((string)App.cityHash[str],(string)localSettings.Values["HeWeatherKey"]);
 
                 ImageBrush ibback = new ImageBrush();
                 Image iweather = new Image();
@@ -118,43 +105,31 @@ namespace Weather2
                 ng.Children.Add(chengshiText);
                 morenButton.Background = ibback;
                 morenButton.Content = ng;
-                
-                
-                //if (ht.ContainsKey(str))
-                //{
-                //    ImageBrush ib = new ImageBrush();
-                //    string tise = ht[str].ToString();
-                //    ib.ImageSource = new BitmapImage(new Uri(String.Format("ms-appx:///" + tise), UriKind.Absolute));
-                //    ib.Stretch = Stretch.UniformToFill;
-                //    //string tise = ht[localSettings.Values["NowDisplayCity"].ToString()].ToString();
-                //    morenButton.Background = ib;
-
-                //}
-                //else
-                //{
-                //    ImageBrush ib = new ImageBrush();
-                //    ib.ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/CityImages/other.jpg", UriKind.Absolute));
-                //    ib.Stretch = Stretch.UniformToFill;
-                //    morenButton.Background = ib;
-
-                //}
             }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            favoriteCityWeather = e.Parameter as ObservableCollection<Weather>;
+            if (null != e.Parameter)
+            {
+                favoriteCityWeather = e.Parameter as ObservableCollection<Weather>;
+
+            }
+            
         }
-
-
-        
-        
 
         private void morenButton_Click(object sender, RoutedEventArgs e)
         {
             Frame frame = Window.Current.Content as Frame;
-            frame.Navigate(typeof(MainPage), localSettings.Values["DefaultCity"]);
+            if (null == localSettings.Values["DefaultCity"])
+            {
+                frame.Navigate(typeof(FirstLaunchPage));
+            }
+            else
+            {
+                frame.Navigate(typeof(MainPage), localSettings.Values["DefaultCity"]);
+            }           
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -178,19 +153,6 @@ namespace Weather2
                 frame.Navigate(typeof(MainPage), weather.data[0].basic.city);
             }
         }
-
-        //private void GridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        //{
-        //    GridView gv = sender as GridView;
-        //    Grid g = sender as Grid;
-        //    int k = gv.SelectedIndex;
-        //    List<Grid> lg = new List<Grid>();
-        //    FindVisualChildByNameAndOrder(gv, "RootGrid", lg);
-        //    if(null != lg[k])
-        //    {
-        //        FlyoutBase.ShowAttachedFlyout(lg[k]);
-        //    }
-        //}
 
         private void FindVisualChildByNameAndOrder<Grid>(DependencyObject parent, string name, List<Grid> gridList) where Grid : DependencyObject
         {

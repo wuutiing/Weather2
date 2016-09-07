@@ -223,6 +223,7 @@
             <TextBlock Text="请选择默认城市" 
                        FontSize="24"
                        Margin="10,25,0,25"
+                       Foreground="White"
                        />
              
             <AutoSuggestBox Name="myAutoSuggestBox"

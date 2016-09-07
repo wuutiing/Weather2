@@ -34,7 +34,45 @@ namespace Weather2
             popularCities = CityProxy.GetPopularCities();
         }
 
-        
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if(null != e.Parameter)
+            {
+                string sddsss = e.Parameter.ToString();
+                if ("1" == e.Parameter.ToString())
+                {
+                    var dialog = new ContentDialog()
+                    {
+                        Title = "大气探测装置受阻",
+                        Content = "定位未打开或没有定位权限，请转到设置",
+                        PrimaryButtonText = "确定",
+                        SecondaryButtonText = "取消",
+                        FullSizeDesired = false,
+
+                    };
+                    dialog.PrimaryButtonClick += async (s, ee) => { await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-location")); };
+                    dialog.SecondaryButtonClick += (s, ee) => { dialog.Hide(); };
+                    await dialog.ShowAsync();
+                }
+                else if ("2" == e.Parameter.ToString())
+                {
+                    var dialog = new ContentDialog()
+                    {
+                        Title = "大气探测装置出现错误",
+                        Content = "定位失败，可能的原因是不支持的地点，或者是自定义TencentKey无效，请尝试搜索/更改自定义Key",
+
+                        SecondaryButtonText = "关闭",
+                        FullSizeDesired = false,
+                    };
+                    dialog.SecondaryButtonClick += (s, ee) => { };
+                    await dialog.ShowAsync();
+                }
+            }
+            
+            
+        }
+
         private void myGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var item = myGridView.SelectedItem as CityInfo;
@@ -45,8 +83,6 @@ namespace Weather2
             if (localSettings.Values["isFirstLaunched"] == null)
                 localSettings.Values["isFirstLaunched"] = 0;
         }
-        
- 
 
         private void myAutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
@@ -75,7 +111,7 @@ namespace Weather2
             if(asb.Text != "")
             {
                 List<CityInfo> all = new List<CityInfo>();
-                var cityList = await CityProxy.GetCityListAsync();
+                var cityList = await CityProxy.GetCityListAsync((string)localSettings.Values["HeWeatherKey"]);
                 foreach (CityInfo o in cityList.city_info)
                 {
                     all.Add(o);
@@ -121,14 +157,6 @@ namespace Weather2
             }
         }
 
-        //private void Page_Loaded(object sender, RoutedEventArgs e)
-        //{
-            
-        //}
-        //protected override void OnNavigatedTo(NavigationEventArgs e)
-        //{
-            
-
-        //}
+       
     }
 }

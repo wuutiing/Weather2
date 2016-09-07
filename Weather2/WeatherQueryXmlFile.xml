@@ -5,26 +5,36 @@
     <Example> 探测杭州的情况 </Example>
 
     <Command Name="WeatherQueryCommand">
-      <Example> 杭州的情况 </Example>
+      <Example> 探测杭州的情况 </Example>
       <ListenFor> 探测{cityName}[的][情况] </ListenFor>
+      <ListenFor> 向{cityName}进发 </ListenFor>
       <ListenFor> 进入{cityName}[市] </ListenFor>
       <Feedback> 正在进行探测，目标：{cityName}... </Feedback>
       <Navigate></Navigate>
     </Command>
+    <Command Name="CheckFavoriteCommand">
+      <Example> 查看收藏的城市 </Example>
+      <ListenFor> [查看]收藏[的][城市] </ListenFor>
+      <Feedback> 正在进入收藏... </Feedback>
+      <Navigate/>
+    </Command>
+    <Command Name="enterSet">
+      <Example> 启动默认页面 </Example>
+      <ListenFor> [启动]默认页面 </ListenFor>
+      <ListenFor> [进入]默认页面 </ListenFor>
+      <ListenFor> 探测默认城市 </ListenFor>
+      <Feedback> 正在探测默认城市... </Feedback>
+      <Navigate/>
+    </Command>
 
     <PhraseList Label="cityName">
-      <Item>杭州</Item>
-      <Item>北京</Item>
-      <Item>上海</Item>
-      <Item>广州</Item>
-      <Item>深圳</Item>
-      <Item>重庆</Item>
-      <Item>天津</Item>
-      <Item>南京</Item>
-      <Item>衢州</Item>
-      <Item>开化</Item>
-
+      <Item> 杭州 </Item>
+      <Item> 北京 </Item>
+      <Item> 上海 </Item>
+      <Item> 广州 </Item>
+      <Item> 深圳 </Item>      
     </PhraseList>
+    
     
   </CommandSet>
 </VoiceCommands>

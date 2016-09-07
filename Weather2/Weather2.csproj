@@ -16,7 +16,12 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Weather2_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Weather2_StoreKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>7BCCB9F257DA6DA171C1A01A5F8640AD85716773</PackageCertificateThumbprint>
+    <AppxPackageDir>C:\Users\wuuti\documents\visual studio 2015\Projects\Weather2\Weather2\AppPackages5</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -125,11 +130,23 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="Weather2_StoreKey.pfx" />
     <None Include="Weather2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\CityImages\beijing.jpg" />
+    <Content Include="Assets\CityImages\chengdu.jpg" />
+    <Content Include="Assets\CityImages\chongqing.jpg" />
+    <Content Include="Assets\CityImages\guangzhou.jpg" />
     <Content Include="Assets\CityImages\hangzhou.jpg" />
+    <Content Include="Assets\CityImages\nanjing.jpg" />
     <Content Include="Assets\CityImages\other.jpg" />
+    <Content Include="Assets\CityImages\shanghai.jpg" />
+    <Content Include="Assets\CityImages\shenzhen.jpg" />
+    <Content Include="Assets\CityImages\suzhou.jpg" />
+    <Content Include="Assets\CityImages\tianjin.jpg" />
+    <Content Include="Assets\CityImages\wulumuqi.jpg" />
+    <Content Include="Assets\CityImages\xian.jpg" />
     <Content Include="Assets\CityImages\上海.png" />
     <Content Include="Assets\CityImages\乌鲁木齐.png" />
     <Content Include="Assets\CityImages\北京.png" />
@@ -137,11 +154,16 @@
     <Content Include="Assets\CityImages\天津.png" />
     <Content Include="Assets\CityImages\广州.png" />
     <Content Include="Assets\CityImages\开化.png" />
+    <Content Include="Assets\CityImages\成都.png" />
     <Content Include="Assets\CityImages\杭州.png" />
     <Content Include="Assets\CityImages\深圳.png" />
+    <Content Include="Assets\CityImages\苏州.png" />
     <Content Include="Assets\CityImages\衢州.png" />
     <Content Include="Assets\CityImages\西安.png" />
     <Content Include="Assets\CityImages\重庆.png" />
+    <Content Include="Assets\Icons\HeWeatherIcon.jpg" />
+    <Content Include="Assets\Icons\TencentIcon.png" />
+    <Content Include="Assets\wa.jpg" />
     <Content Include="Assets\WeatherBackImages\100.png" />
     <Content Include="Assets\WeatherBackImages\100n.png" />
     <Content Include="Assets\WeatherBackImages\101.png" />
@@ -349,6 +371,7 @@
     <Content Include="Assets\WeatherImages\999.png" />
     <Content Include="Assets\WeatherImages\999n.png" />
     <Content Include="Assets\晴天.jpg" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -367,6 +390,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="DeviceFamily-Mobile\Favorites.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeviceFamily-Mobile\FirstLaunchPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeviceFamily-Mobile\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeviceFamily-Mobile\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeviceFamily-Mobile\WeatherPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Favorites.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -388,7 +431,20 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherBackground\WeatherBackground.csproj">
+      <Project>{71fcd928-6c8c-43c6-88b2-177ac0b75917}</Project>
+      <Name>WeatherBackground</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="WindowsDesktop, Version=10.0.10586.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
+    <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
+      <Name>Windows Mobile Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

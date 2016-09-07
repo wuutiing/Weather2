@@ -35,12 +35,10 @@ namespace Weather2
         {
             this.InitializeComponent();
             this.DataContext = fcl;
-            if (localSettings.Values["NowDisplayCity"] != null)
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
-                fcl.cityNow = (string)localSettings.Values["NowDisplayCity"];
+                searchCityBoxGrid.Visibility = Visibility.Collapsed;
             }
-            
-            
         }
 
         //private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -50,25 +48,78 @@ namespace Weather2
         //    image1.Source = new BitmapImage(new Uri(String.Format("http://files.heweather.com/cond_icon/{0}.png", code)));
         //    textBlock1.Text = myWeather.data[0].now.cond.txt;
         //}
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected  override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            
+            //处理从firstlaunchpage页/搜索导航到mainpage页进一步加载weatherpage页
             if ((string)e.Parameter != "" && e.Parameter != null && App.cityHash.ContainsKey((string)e.Parameter))
-            {
-                //只有传入了有效的城市名才可以进行的获取城市天气
+            {   
                 string info = (string)e.Parameter;
                 //Weather myWeather = await WeatherProxy.GetWeatherByCityIdAsync((string)App.cityHash[info]);
                 //mainFrame.Navigate(typeof(WeatherPage),myWeather);
                 localSettings.Values["NowDisplayCity"] = info;
-                fcl.cityNow = localSettings.Values["NowDisplayCity"].ToString();
-                HeadingText.Text = info;                
+                fcl.cityNow = (string)localSettings.Values["NowDisplayCity"];
                 myListView.SelectedIndex = 0;                
             }
+            //处理从Cortana导航到mainpage页进一步加载favorites页
+            else if("Favorite" == (string)e.Parameter)
+            {
+                myListView.SelectedIndex = 1;
+            }
+            //处理正常打开APP的流程
             else
             {
-                //mainFrame.Navigate(typeof(WeatherPage));
-                Frame myFrame = Window.Current.Content as Frame;
-                myFrame.Navigate(typeof(FirstLaunchPage));
+                if (1 == (int)localSettings.Values["isAlwaysGotoDefault"])
+                {
+                    if(null != localSettings.Values["DefaultCity"])
+                    {
+                        localSettings.Values["NowDisplayCity"] = localSettings.Values["DefaultCity"];
+                        myListView.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        mainFrame.Navigate(typeof(FirstLaunchPage));
+                        storyboard3.Begin();
+
+                    }
+
+                }
+                else if (2 == (int)localSettings.Values["isAlwaysGotoDefault"])
+                {
+                    bool isGeoAllowed = await GeoProxy.isGeoallowedAsync();
+                    if (!isGeoAllowed)
+                    {
+                        mainFrame.Navigate(typeof(FirstLaunchPage), "1");
+                        storyboard3.Begin();
+
+                    }
+                    else
+                    {
+                        var geo = await GeoProxy.GetGeoLocationAsync();
+
+                        OneLocation ol = await CityProxy.GetCityByLocationAsync(geo.Coordinate.Point.Position.Latitude,
+                            geo.Coordinate.Point.Position.Longitude,
+                            (string)localSettings.Values["TencentKey"]);
+                        string str = CityProxy.GetCityName(ol);
+                        if (App.cityHash.Contains(str))
+                        {
+                            localSettings.Values["NowDisplayCity"] = str;
+                            myListView.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            mainFrame.Navigate(typeof(FirstLaunchPage), "2");
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    mainFrame.Navigate(typeof(FirstLaunchPage));
+                }
+                fcl.cityNow = (string)localSettings.Values["NowDisplayCity"];
+
             }
         }
 
@@ -80,37 +131,54 @@ namespace Weather2
 
         private void ListViewItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var listViewItem = sender as ListViewItem;
-            listViewItem.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255,25,25,112));
-            myListView.SelectedIndex = -1;
-            HeadingText.Text = "设置";
-            searchCityBox.Visibility = Visibility.Collapsed;
-            addToFavorite.Visibility = Visibility.Collapsed;
-            mainFrame.Navigate(typeof(Settings));
-            mySplitView.IsPaneOpen = false;
+            if(myListView.SelectedIndex != -1)
+            {
+                var listViewItem = sender as ListViewItem;
+                listViewItem.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 25, 25, 112));
+                myListView.SelectedIndex = -1;
+                HeadingText.Text = "设置";
+                searchCityBox.Visibility = Visibility.Collapsed;
+                addToFavorite.Visibility = Visibility.Collapsed;
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                {
+                    searchButton.Visibility = Visibility.Collapsed;
+                    searchCityBoxGrid.Visibility = Visibility.Collapsed;
+                }
+                mainFrame.Navigate(typeof(Settings));
+                mySplitView.IsPaneOpen = false;
+                storyboard3.Begin();
+            }
+            
         }
 
         private async void myListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             mySplitView.IsPaneOpen = false;
             var listView = sender as ListView;
-            if(listView.SelectedIndex != -1)
+            if (listView.SelectedIndex != -1)
             {
                 searchCityBox.Visibility = Visibility.Visible;
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                {
+                    searchButton.Visibility = Visibility.Visible;
+                    searchCityBoxGrid.Visibility = Visibility.Collapsed;
+                }
                 myListViewItem.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 255, 255, 255));
             }
-            if(listView.SelectedIndex == 0)
+            if (listView.SelectedIndex == 0)
             {
                 HeadingText.Text = localSettings.Values["NowDisplayCity"].ToString();
                 mainFrame.Navigate(typeof(WeatherPage));
                 addToFavorite.Visibility = Visibility.Visible;
+                storyboard3.Begin();
             }
-            if(listView.SelectedIndex == 1)
+            if (listView.SelectedIndex == 1)
             {
                 HeadingText.Text = "我的收藏";
                 object fcw = await getFavoriteWeathersAsync();
-                mainFrame.Navigate(typeof(Favorites),fcw);
+                mainFrame.Navigate(typeof(Favorites), fcw);
                 addToFavorite.Visibility = Visibility.Collapsed;
+                storyboard3.Begin();
             }
         }
 
@@ -120,7 +188,7 @@ namespace Weather2
             if (asb.Text != "")
             {
                 List<CityInfo> all = new List<CityInfo>();
-                var cityList = await CityProxy.GetCityListAsync();
+                var cityList = await CityProxy.GetCityListAsync((string)localSettings.Values["HeWeatherKey"]);
                 foreach (CityInfo o in cityList.city_info)
                 {
                     all.Add(o);
@@ -132,6 +200,7 @@ namespace Weather2
             {
                 asb.ItemsSource = null;
             }
+            
         }
 
         private void searchCityBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -139,12 +208,7 @@ namespace Weather2
             var asb = (AutoSuggestBox)sender;
             var cityInfo = args.SelectedItem as CityInfo;
             asb.Text = cityInfo.city;
-            Frame thisFrame = Window.Current.Content as Frame;
-            thisFrame.Navigate(typeof(MainPage), asb.Text);
-            localSettings.Values["NowDisplayCity"] = asb.Text;
-            fcl.cityNow = localSettings.Values["NowDisplayCity"].ToString();
-            //if (localSettings.Values["isFirstLaunched"] == null)
-            //    localSettings.Values["isFirstLaunched"] = 0;
+            
         }
 
         private async void searchCityBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -152,39 +216,53 @@ namespace Weather2
             var asb = (AutoSuggestBox)sender;
             if (!App.cityHash.ContainsKey(asb.Text))
             {
-                var messageDialog = new MessageDialog(String.Format("大气探测装置无法检测到\"{0}\"的存在。", asb.Text))
+                var dialog = new ContentDialog()
                 {
-                    Title = "告诉你一个坏消息"
+                    Title = "大事不好啦",
+                    Content = String.Format("大气探测装置无法检测到\"{0}\"的存在。", asb.Text),
+                    SecondaryButtonText = "关闭",
+                    FullSizeDesired = false,
                 };
-                messageDialog.Commands.Add(new UICommand("关闭", cmd => { }, commandId: 0));
-                await messageDialog.ShowAsync();
+                dialog.SecondaryButtonClick += (s, ee) => { dialog.Hide(); };
+                await dialog.ShowAsync();
+                
             }
             else
-            {
-                Frame thisFrame = Window.Current.Content as Frame;
-                thisFrame.Navigate(typeof(MainPage), asb.Text);
+            {                
                 localSettings.Values["NowDisplayCity"] = asb.Text;
                 fcl.cityNow = localSettings.Values["NowDisplayCity"].ToString();
-                //if (localSettings.Values["isFirstLaunched"] == null)
-                //    localSettings.Values["isFirstLaunched"] = 0;
-            }
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                {
+                    searchButton.Visibility = Visibility.Visible;
+                    searchCityBoxGrid.Visibility = Visibility.Collapsed;
+                }
+                if (myListView.SelectedIndex == 0)
+                {
+                    mainFrame.Navigate(typeof(WeatherPage));
+                    HeadingText.Text = (string)localSettings.Values["NowDisplayCity"];
+                    storyboard3.Begin();
+                }
+                else myListView.SelectedIndex = 0;
+                asb.Text = "";
+                asb.ItemsSource = null;
+            }            
         }
+
         private async Task<Object> getFavoriteWeathersAsync()
         {
-            System.Collections.ObjectModel.ObservableCollection<Weather> favoriteCityWeathers = new System.Collections.ObjectModel.ObservableCollection<Weather>();
+            System.Collections.ObjectModel.ObservableCollection<Weather> favoriteCityWeathers = 
+                new System.Collections.ObjectModel.ObservableCollection<Weather>();
             if (localSettings.Values["FavoriteCities"] != null)
             {
                 string[] strs = (string[])localSettings.Values["FavoriteCities"];
                 for (int i = 0; i < strs.Count(); i++)
                 {
                     string iefael = strs[i];
-                    Weather w = await WeatherProxy.GetWeatherByCityIdAsync((string)App.cityHash[strs[i]]);
+                    Weather w = await WeatherProxy.GetWeatherByCityIdAsync((string)App.cityHash[strs[i]],(string)localSettings.Values["HeWeatherKey"]);
                     favoriteCityWeathers.Add(w);
                 }
-            }
-            
+            }            
             return favoriteCityWeathers;
-             
         }
 
         private async void addToFavorite_Click(object sender, RoutedEventArgs e)
@@ -212,25 +290,51 @@ namespace Weather2
                 }
                 else if(strs.Count() == 5)
                 {
-                    if (strs.Contains((string)localSettings.Values["NowDisplayCity"]))
+                    if(null == localSettings.Values["isMagician"])
                     {
-                        List<string> l = strs.ToList();
-                        int i = l.IndexOf((string)localSettings.Values["NowDisplayCity"]);
-                        l.RemoveAt(i);
-                        string[] strss = l.ToArray();
-                        localSettings.Values["FavoriteCities"] = strss;
+                        if (strs.Contains((string)localSettings.Values["NowDisplayCity"]))
+                        {
+                            List<string> l = strs.ToList();
+                            int i = l.IndexOf((string)localSettings.Values["NowDisplayCity"]);
+                            l.RemoveAt(i);
+                            string[] strss = l.ToArray();
+                            localSettings.Values["FavoriteCities"] = strss;
+                        }
+                        else
+                        {
+                            string[] strss = { (string)localSettings.Values["NowDisplayCity"], strs[0], strs[1], strs[2], strs[3] };
+                            localSettings.Values["FavoriteCities"] = strss;
+                            var dialog = new ContentDialog()
+                            {
+                                Title = "您还不是会员",
+                                Content = String.Format("您的存储达到上限，城市\"{0}\"已被挤掉，请到设置中获取会员以享受无限容量。", strs[4]),
+                                SecondaryButtonText = "关闭",
+                                FullSizeDesired = false,
+                            };
+                            dialog.SecondaryButtonClick += (s, ee) => { dialog.Hide(); };
+                            await dialog.ShowAsync();
+
+                        }
                     }
                     else
                     {
-                        string[] strss = { (string)localSettings.Values["NowDisplayCity"], strs[0], strs[1], strs[2], strs[3] };
-                        localSettings.Values["FavoriteCities"] = strss;
-                        var messageDialog = new MessageDialog(String.Format("您的存储达到上限，城市\"{0}\"已被挤掉，请续费会员以获得无限容量。", strs[4]))
+                        if (strs.Contains((string)localSettings.Values["NowDisplayCity"]))
                         {
-                            Title = "会员到期啦"
-                        };
-                        messageDialog.Commands.Add(new UICommand("关闭", cmd => { }, commandId: 0));
-                        await messageDialog.ShowAsync();
+                            List<string> l = strs.ToList();
+                            int i = l.IndexOf((string)localSettings.Values["NowDisplayCity"]);
+                            l.RemoveAt(i);
+                            string[] strss = l.ToArray();
+                            localSettings.Values["FavoriteCities"] = strss;
+                        }
+                        else
+                        {
+                            List<string> l = strs.ToList();
+                            l.Insert(0, (string)localSettings.Values["NowDisplayCity"]);
+                            string[] strss = l.ToArray();
+                            localSettings.Values["FavoriteCities"] = strss;
+                        }
                     }
+                    
                 }
                 else
                 {
@@ -253,7 +357,6 @@ namespace Weather2
                 
             }
             fcl.cityNow = localSettings.Values["NowDisplayCity"].ToString();
-
         }
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -265,12 +368,14 @@ namespace Weather2
         {
             flagText.Opacity = 1;
             mainFrame.Navigate(typeof(WeatherPage));
-            storyboard.Begin();
-            
-            storyboard2.Begin();
-            
+            storyboard.Begin();            
+            storyboard2.Begin();            
         }
 
-        
+        private void searchButton_Click(object sender, RoutedEventArgs e)
+        {
+            searchButton.Visibility = Visibility.Collapsed;
+            searchCityBoxGrid.Visibility = Visibility.Visible;
+        }
     }
 }

@@ -24,6 +24,9 @@
 
             </DoubleAnimation>
         </Storyboard>
+        <Storyboard x:Name="storyboard3">
+            <DoubleAnimation Storyboard.TargetName="ScrollviewerRenderTransform" Storyboard.TargetProperty="ScaleY" From="0" To="1" Duration="0:0:0.5"/>
+        </Storyboard>
         <convt:CondToTxtConverter x:Key="condToTxtconveter"/>
         <convt:DateToTxtConverter x:Key="dateToTxtConverter"/>
         <convt:tempToTxtConverter x:Key="tempToTxtConverter1"/>
@@ -105,7 +108,7 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" Name="myScrollViewer3">
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -114,7 +117,6 @@
                         <AdaptiveTrigger MinWindowWidth="800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="myScrollViewer1.Margin" Value="240,0,0,0"/>
                         <Setter Target="leftButton.Visibility" Value="Collapsed"/>
                         <Setter Target="rightButton.Visibility" Value="Collapsed"/>
                         <Setter Target="detailButton.Content" Value="&#xE0AD;"/>
@@ -141,20 +143,64 @@
                 <TextBlock Name="Temperature" Foreground="White" FontSize="72" RelativePanel.AlignBottomWithPanel="True"  
                            RelativePanel.RightOf="WeatherIcon"/>
                 <Button Name="detailButton" Content="&#xE741;" RelativePanel.RightOf="Temperature" RelativePanel.AlignBottomWith="Temperature" 
-                        Style="{StaticResource ButtonStyle1}"></Button>
-    
+                        Style="{StaticResource ButtonStyle1}" Click="detailButton_Click"></Button>
+                <Button Name="closeDetailButton" Content="&#xE10A;" RelativePanel.RightOf="Temperature" RelativePanel.AlignBottomWith="Temperature" 
+                        Style="{StaticResource ButtonStyle1}" Visibility="Collapsed" Click="closeDetailButton_Click"/>
+
             </RelativePanel>
-            <ScrollViewer Height="150" Margin="0,150,0,0" Name="myScrollViewer1" VerticalScrollBarVisibility="Hidden" 
-                          Background="#66FFFFFF" Visibility="Collapsed">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Name="suggestion1" Text="22" FontSize="18" TextWrapping="Wrap"/>
-                    <TextBlock Text="33" FontSize="18"/>
+            <ScrollViewer Margin="10,150,10,0" Name="myScrollViewer1" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" 
+                          HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled" MaxWidth="700"
+                          Background="#66FFFFFF" Visibility="Collapsed" >
+                <StackPanel Orientation="Horizontal" Margin="0,25,0,20">
+                    <StackPanel Width="100" Padding="3" Name="comfortS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xE899;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="comfortB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>                        
+                        <TextBlock Name="comfortD" FontSize="12" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Width="100" Padding="3" Name="feelTemS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xED54;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="feelTemB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>
+                        <TextBlock Name="feelTemD" FontSize="12" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Width="100" Padding="3" Name="sportS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xE805;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="sportB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>
+                        <TextBlock Name="sportD" FontSize="12" TextWrapping="Wrap"/>
+
+                    </StackPanel>
+                    <StackPanel Width="100" Padding="3" Name="travelS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xE709;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="travelB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>                       
+                        <TextBlock Name="travelD" FontSize="12" TextWrapping="Wrap"/>
+
+                    </StackPanel>
+                    <StackPanel Width="100" Padding="3" Name="washCarS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xE804;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="washCarB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>                       
+                        <TextBlock Name="washCarD" FontSize="12" TextWrapping="Wrap"/>
+
+                    </StackPanel>
+                    <StackPanel Width="100" Padding="3" Name="uvS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDB1;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="uvB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>                       
+                        <TextBlock Name="uvD" FontSize="12" TextWrapping="Wrap"/>
+
+                    </StackPanel>
+                    <StackPanel Width="100" Padding="3" Name="fluS">
+                        <FontIcon FontSize="48" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDAD;" HorizontalAlignment="Left"></FontIcon>
+                        <TextBlock Name="fluB" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,10"/>                       
+                        <TextBlock Name="fluD" FontSize="12" TextWrapping="Wrap"/>
+
+                    </StackPanel>
                 </StackPanel>
+                <ScrollViewer.RenderTransform>
+                    <ScaleTransform x:Name="ScrollviewerRenderTransform"></ScaleTransform>
+                </ScrollViewer.RenderTransform>
             </ScrollViewer>
     
             <RelativePanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">
                 
-                <Grid Name="myGrid" Margin="10,25,10,0" Opacity="0">
+                <Grid Name="myGrid" Margin="10,25,10,10" Opacity="0">
                     <ItemsControl Name="myItemsControl" HorizontalAlignment="Left">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -230,7 +276,7 @@
                                     <TextBlock Margin="0,40,0,0" Text="%" FontSize="12" RelativePanel.RightOf="humTextBlock" />
                                     <TextBlock Margin="0,70,0,0" Name="windTextBlock" Text="{Binding wind,Converter={StaticResource windToTxtConverter}}" FontSize="12" 
                                            RelativePanel.AlignHorizontalCenterWithPanel="True"/>
-                                    <TextBlock Margin="0,100,0,10"  FontSize="9" RelativePanel.AlignLeftWith="windTextBlock"
+                                    <TextBlock Margin="0,100,0,40"  FontSize="9" RelativePanel.AlignLeftWith="windTextBlock"
                                            Text="{Binding date,Converter={StaticResource dateToTxtConverter},ConverterParameter=time}"/>
 
                                 </RelativePanel>

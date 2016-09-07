@@ -223,22 +223,169 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Grid Padding="10,30,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>            
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="0,0,10,0">默认城市:</TextBlock>
-                <TextBlock Style="{StaticResource myTextBlockStyle}" Name="defaultCity"></TextBlock>
-                <Button Margin="10,0,10,0" FontSize="12" Content="清除" Click="Button_Click_1"></Button>
-                <Button FontSize="12" Content="重新设置默认城市" Click="Button_Click_2"></Button>
-            </StackPanel>
-            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                <TextBlock Style="{StaticResource myTextBlockStyle}" Text="运行后直接进入首页" Margin="0,0,30,0"/>
-                <ToggleSwitch Name="myToggleSwitch" Style="{StaticResource ToggleSwitchStyle1}" Margin="0,-6,0,0" Toggled="myToggleSwitch_Toggled" ></ToggleSwitch>
-            </StackPanel>
-            <Button Margin="0,20,0,0" Content="清除应用数据" FontSize="12" Click="Button_Click"/>
-        </StackPanel>
+    <Pivot Name="settingsPivot">
+        <PivotItem Header="设置">
+            <ScrollViewer Padding="10,10,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="0,0,10,0">默认城市:</TextBlock>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Name="defaultCity">未设置默认城市</TextBlock>
+                        <Button Margin="10,0,10,0" Content="设置默认城市" Click="Button_Click_2"></Button>
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="运行后直接进入默认城市" Margin="0,0,30,0"/>
+                        <ToggleSwitch Name="myToggleSwitch" Style="{StaticResource ToggleSwitchStyle1}" Margin="0,-6,0,0" Toggled="myToggleSwitch_Toggled" ></ToggleSwitch>
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="运行后进入定位城市" Margin="0,0,30,0"/>
+                        <ToggleSwitch Name="myToggleSwitch2" Style="{StaticResource ToggleSwitchStyle1}" Margin="0,-6,0,0"  Toggled="myToggleSwitch2_Toggled"
+                              ></ToggleSwitch>
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource myTextBlockStyle}" Text="订阅天气详情" Margin="0,0,30,0"/>
+                            <ToggleSwitch Name="myToggleSwitch3" Style="{StaticResource ToggleSwitchStyle1}" Margin="0,-6,0,0" Toggled="myToggleSwitch3_Toggled"></ToggleSwitch>
+
+                        </StackPanel>
+                        <StackPanel Name="subscriptionList">
+                            <CheckBox Name="cb0" Content="舒适度" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+                            <CheckBox Name="cb1" Content="体感温度" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+                            <CheckBox Name="cb2" Content="运动" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+                            <CheckBox Name="cb3" Content="旅游" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+                            <CheckBox Name="cb4" Content="洗车" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+                            <CheckBox Name="cb5" Content="紫外线" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+                            <CheckBox Name="cb6" Content="流感" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+
+                        </StackPanel>
+
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="自定义TencentKey" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Name="TencentKeyTX" Width="350" Height="36" VerticalAlignment="Center"/>
+                            <Button Name="TencentKeyB" Content="设置TencentKey" Margin="10,0,0,0" Click="TencentKeyB_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="自定义HeWeatherKey" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Name="HeWeatherKeyTX" Width="300" Height="36" VerticalAlignment="Center"/>
+                            <Button Name="HeWeatherKeyB" Content="设置HeWeatherKey" Margin="10,0,0,0" Click="HeWeatherKeyB_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <Button Margin="0,20,0,20" Content="清除应用数据" Click="Button_Click"/>
+                </StackPanel>
 
 
 
-    </Grid>
+            </ScrollViewer>
+        </PivotItem>
+        <PivotItem Header="关于">
+            <ScrollViewer Margin="10,10,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <StackPanel >
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="关于作者：" Style="{StaticResource myTextBlockStyle}" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <StackPanel Grid.Column="1">
+                            <HyperlinkButton Content="Github/wuutiing" NavigateUri="https://github.com/wuutiing/Weather2" Margin="0,-6,0,0"/>
+                            <HyperlinkButton Content="新浪微博" NavigateUri="http://weibo.com/3286626381/profile?topnav=1&amp;wvr=6&amp;is_all=1"/>
+                            <HyperlinkButton Content="邮箱（wuutiing@outlook.com）" Click="HyperlinkButton_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="0,0,10,0">天气数据提供方：</TextBlock>
+                        <HyperlinkButton NavigateUri="http://www.heweather.com/" Margin="0,-3,0,0">
+                            <HyperlinkButton.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="ms-appx:///Assets/Icons/HeWeatherIcon.jpg" Height="18" Width="18" Margin="0,0,5,0"/>
+                                    <TextBlock Text="http://www.heweather.com/" Style="{StaticResource myTextBlockStyle}"/>
+                                </StackPanel>
+                            </HyperlinkButton.Content>
+                        </HyperlinkButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="0,0,10,0">定位方法支持：</TextBlock>
+                        <HyperlinkButton NavigateUri="http://lbs.qq.com/" Margin="0,-3,0,0">
+                            <HyperlinkButton.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="ms-appx:///Assets/Icons/TencentIcon.png" Height="18" Width="125" Margin="0,0,5,0"/>
+                                    <TextBlock Text="http://lbs.qq.com/" Style="{StaticResource myTextBlockStyle}"/>
+                                </StackPanel>
+                            </HyperlinkButton.Content>
+                        </HyperlinkButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="Hello-UWP粉丝交流群：" Margin="0,0,10,0"/>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="436271904"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="支付宝（感谢捐赠）：" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Name="AliPayText" Text="quzhouwuting@163.com" Margin="10,0,10,0"/>
+                        <HyperlinkButton Content="复制" Click="HyperlinkButton_Click_1" Margin="0,-3,0,0"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,20">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="本作品为本人习作出品，供交流学习使用，如有侵权，请告知本人，以及时修改。同时，未经本人允许，其他公司或个人不得将其用于商业活动。" TextWrapping="Wrap" Margin="0,0,6,0"></TextBlock>
+
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+        </PivotItem>
+        <PivotItem Header="帮助">
+            <ScrollViewer Margin="10,10,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <StackPanel>
+                    <StackPanel Margin="0,20,0,20">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="大气探测装置功能说明：" FontSize="18"/>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" HorizontalAlignment="Left" MaxWidth="700" Text="大气探测装置是一款简洁的天气预报UWP应用，支持Win10和Win10 Mobile，主要的功能有：" TextWrapping="Wrap" Margin="0,6,6,0"></TextBlock>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="根据您所在的定位信息获取天气；" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="自定义默认城市，个性化定制城市收藏；" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="自定义启动方式：从默认城市启动/从定位启动/从搜索启动；" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="中二向的Cortana语音命令；" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="48,6,0,0" Text="请尝试如下语音命令:" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="48,6,0,0" Text="大气探测装置 探测杭州情况" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="48,6,0,0" Text="大气探测装置 探测默认城市" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="48,6,0,0" Text="查看收藏的城市" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="更多语音命令，查询Cortana" />
+
+
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="将城市加入收藏，Cortana将响应您收藏的城市；" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="通过验证加入魔法协会获取无限制收藏容量；" />
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="更多功能需求请与本人联系；" />
+
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="关于自定义Key：" FontSize="18"/>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" HorizontalAlignment="Left" MaxWidth="700" Text="设置-通用中提供自定义Key的功能，由于本作品调用api请求次数有限，次数用尽后可能会出现一些奇妙bug，为避免遭到此类bug，可以尝试去设置页展示的服务提供商处注册账号和申请Key，完成设置后应用将使用您的Key请求数据，这将确保您的使用体验。具体申请Key的方法参考服务提供商的相关文档。" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Margin="24,6,0,0" Text="如果您在使用中发现了没有弹出窗口的未知bug（空屏、闪退等），请及时联系本人，共同学习" TextWrapping="Wrap"/>
+
+                    </StackPanel>
+                    <StackPanel Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="关于获取会员：" FontSize="18"/>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" HorizontalAlignment="Left" MaxWidth="700" Text="获取会员需要验证加入魔法协会，验证方式在设置-会员处。" TextWrapping="Wrap" Margin="0,6,6,0"></TextBlock>
+
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </PivotItem>
+        <PivotItem Header="会员">
+            <ScrollViewer Margin="10,10,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <StackPanel>
+                    <StackPanel Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="如何获取会员？"/>
+                        <Image Height="170" Width="250" Source="Assets/wa.jpg" Margin="0,6,0,0" HorizontalAlignment="Left"/>
+                        <TextBlock Style="{StaticResource myTextBlockStyle}" Text="看到这张图片后，您有什么感想？" TextWrapping="Wrap" Margin="0,6,6,6"></TextBlock>
+                        <TextBox HorizontalAlignment="Left" Width="250" Name="answerTextBox"></TextBox>
+                        <Button Margin="0,6,0,0" Content="提交" Click="Button_Click_1"/>
+                    </StackPanel>
+
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </PivotItem>
+    </Pivot>
+    
 </Page>
